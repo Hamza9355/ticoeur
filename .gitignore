@@ -1,0 +1,8 @@
+node_modules/
+.env.local
+.env.*.local
+*.log
+Build/
+dist/
+ticoeur.db
+.DS_Store
