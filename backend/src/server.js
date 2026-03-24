@@ -15,6 +15,13 @@ const __dirname = dirname(__filename)
 const app = express()
 const PORT = process.env.PORT || 5000
 
+// Logger personnalisé
+const logger = {
+  info: (msg) => console.log(`[INFO] ${new Date().toISOString()} - ${msg}`),
+  error: (msg, error) => console.error(`[ERROR] ${new Date().toISOString()} - ${msg}`, error || ''),
+  warn: (msg) => console.warn(`[WARN] ${new Date().toISOString()} - ${msg}`)
+}
+
 // Middleware de sécurité
 app.use(helmet())
 app.use(compression())
@@ -47,8 +54,20 @@ app.use(limiter)
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ limit: '10mb', extended: true }))
 
+// Middleware de logging
+app.use((req, res, next) => {
+  logger.info(`${req.method} ${req.path}`)
+  next()
+})
+
 // Initialiser la base de données
-await initializeDatabase()
+try {
+  await initializeDatabase()
+  logger.info('✅ Base de données initialisée')
+} catch (error) {
+  logger.error('❌ Erreur lors de l\'initialisation de la DB:', error)
+  process.exit(1)
+}
 
 // Routes
 app.use('/api/products', productRoutes)
@@ -61,19 +80,24 @@ app.get('/api/health', (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
+  logger.warn(`Route non trouvée: ${req.method} ${req.path}`)
   res.status(404).json({ error: 'Route non trouvée' })
 })
 
-// Error handler
+// Error handler global
 app.use((err, req, res, next) => {
-  console.error('Erreur:', err)
-  res.status(500).json({ error: 'Erreur serveur interne' })
+  logger.error(`Erreur non gérée: ${req.method} ${req.path}`, err)
+  res.status(err.status || 500).json({ 
+    error: process.env.NODE_ENV === 'production' 
+      ? 'Erreur serveur interne' 
+      : err.message
+  })
 })
 
 app.listen(PORT, () => {
-  console.log(`🚀 Serveur Ti'Coeur démarré sur http://localhost:${PORT}`)
-  console.log(`📊 Capable de gérer 300 clients simultanés`)
-  console.log(`🗄️  Base de données prête`)
+  logger.info(`🚀 Serveur Ti'Coeur démarré sur http://localhost:${PORT}`)
+  logger.info(`📊 Capable de gérer 300 clients simultanés`)
+  logger.info(`🗄️  Base de données prête`)
 })
 
 export default app
