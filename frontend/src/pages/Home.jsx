@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Heart, Leaf, Zap } from 'lucide-react'
+import ImageCarousel from '../components/ImageCarousel'
 
 function Home() {
   const features = [
@@ -23,6 +24,9 @@ function Home() {
 
   return (
     <div className="w-full">
+      {/* Carousel d'Images */}
+      <ImageCarousel />
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-b from-primary-900 to-primary-800 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -1,3 +1,4 @@
+import dotenv from 'dotenv'
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
@@ -8,6 +9,9 @@ import { dirname } from 'path'
 import { initializeDatabase } from './db/init.js'
 import productRoutes from './routes/products.js'
 import orderRoutes from './routes/orders.js'
+
+// Charger les variables d'environnement
+dotenv.config()
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)

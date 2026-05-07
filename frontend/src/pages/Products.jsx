@@ -2,167 +2,39 @@ import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
 import { motion } from 'framer-motion'
 
-// Sample products data - 20 items
+// Our main products
 const SAMPLE_PRODUCTS = [
   {
     id: 1,
-    name: 'Harmonie Douce',
-    price: 45,
-    image: 'https://via.placeholder.com/300x200?text=Harmonie+Douce',
-    description: 'Un mélange relaxant de verveine et hibiscus',
-    ingredients: 'Verveine citronnée, Hibiscus, Rose, Menthe douce'
+    name: 'Produit 1 - Paquet 10 Sachets',
+    price: 100,
+    image: '/assets/images/PRODUIT.jpeg',
+    description: 'Paquet complet de 10 sachets de tisane premium',
+    ingredients: 'Ingrédients naturels 100% bio'
   },
   {
     id: 2,
-    name: 'Sérénité Orange',
-    price: 50,
-    image: 'https://via.placeholder.com/300x200?text=Serenite+Orange',
-    description: 'Camomille et orange pour la détente',
-    ingredients: 'Orange, Camomille, Mélisse, Gingembre'
+    name: 'Produit 2 - Paquet 10 Sachets',
+    price: 100,
+    image: '/assets/images/PRODUIT2.jpeg',
+    description: 'Paquet complet de 10 sachets de tisane premium',
+    ingredients: 'Ingrédients naturels 100% bio'
   },
   {
     id: 3,
-    name: 'Roses Éternelles',
-    price: 55,
-    image: 'https://via.placeholder.com/300x200?text=Roses+Eternelles',
-    description: 'Pétales de rose pour une expérience luxe',
-    ingredients: 'Pétales de rose, Hibiscus, Menthe, Pomme'
+    name: 'Sachet Individuel',
+    price: 10,
+    image: '/assets/images/WhatsApp Image 2026-04-21 at 23.37.49.jpeg',
+    description: 'Un seul sachet de tisane premium pour déguster',
+    ingredients: 'Ingrédients naturels 100% bio'
   },
   {
     id: 4,
-    name: 'Pomme Cannelle',
-    price: 48,
-    image: 'https://via.placeholder.com/300x200?text=Pomme+Cannelle',
-    description: 'Douceur chaude de la cannelle et pomme',
-    ingredients: 'Pomme, Cannelle, Gingembre, Hibiscus'
-  },
-  {
-    id: 5,
-    name: 'Menthe Rafraîchissante',
-    price: 42,
-    image: 'https://via.placeholder.com/300x200?text=Menthe+Rafraichissante',
-    description: 'Menthe douce pour la fraîcheur',
-    ingredients: 'Menthe douce, Citron, Verbascum, Pomme'
-  },
-  {
-    id: 6,
-    name: 'Gingembre Chaleur',
-    price: 52,
-    image: 'https://via.placeholder.com/300x200?text=Gingembre+Chaleur',
-    description: 'Gingembre doux pour l\'immunité',
-    ingredients: 'Gingembre, Cannelle, Orange, Poivre noir'
-  },
-  {
-    id: 7,
-    name: 'Hibiscus Vibrant',
-    price: 46,
-    image: 'https://via.placeholder.com/300x200?text=Hibiscus+Vibrant',
-    description: 'Fleur d\'hibiscus riche en antioxydants',
-    ingredients: 'Hibiscus, Pomme, Menthe, Citron'
-  },
-  {
-    id: 8,
-    name: 'Lotus Détente',
-    price: 58,
-    image: 'https://via.placeholder.com/300x200?text=Lotus+Detente',
-    description: 'Mélange premium pour un sommeil apaisé',
-    ingredients: 'Camomille, Mélisse, Valériane, Rose'
-  },
-  {
-    id: 9,
-    name: 'Vanille Caramel',
-    price: 54,
-    image: 'https://via.placeholder.com/300x200?text=Vanille+Caramel',
-    description: 'Goût sucré et réconfortant',
-    ingredients: 'Vanille, Caramel, Pomme, Hibiscus'
-  },
-  {
-    id: 10,
-    name: 'Citron Frais',
-    price: 44,
-    image: 'https://via.placeholder.com/300x200?text=Citron+Frais',
-    description: 'Citron vivifiant pour l\'énergie',
-    ingredients: 'Citron, Menthe, Verveine, Gingembre'
-  },
-  {
-    id: 11,
-    name: 'Rose Luxe Premium',
-    price: 65,
-    image: 'https://via.placeholder.com/300x200?text=Rose+Luxe+Premium',
-    description: 'Collection premium de pétales de rose',
-    ingredients: 'Rose premium, Safran, Hibiscus, Miel'
-  },
-  {
-    id: 12,
-    name: 'Bien-être Total',
-    price: 60,
-    image: 'https://via.placeholder.com/300x200?text=Bien-etre+Total',
-    description: 'Blend complet pour la santé globale',
-    ingredients: 'Curcuma, Gingembre, Hibiscus, Orange, Miel'
-  },
-  {
-    id: 13,
-    name: 'Rêves Doux',
-    price: 56,
-    image: 'https://via.placeholder.com/300x200?text=Reves+Doux',
-    description: 'Idéale avant le coucher',
-    ingredients: 'Camomille, Lavande, Mélisse, Menthe'
-  },
-  {
-    id: 14,
-    name: 'Passion Fruit',
-    price: 49,
-    image: 'https://via.placeholder.com/300x200?text=Passion+Fruit',
-    description: 'Saveurs tropicales exotiques',
-    ingredients: 'Fruit de la passion, Hibiscus, Pomme, Citron'
-  },
-  {
-    id: 15,
-    name: 'Miel Douceur',
-    price: 53,
-    image: 'https://via.placeholder.com/300x200?text=Miel+Douceur',
-    description: 'Sucré naturellement au miel',
-    ingredients: 'Miel, Pomme, Camomille, Gingembre'
-  },
-  {
-    id: 16,
-    name: 'Énergies Naturelles',
-    price: 51,
-    image: 'https://via.placeholder.com/300x200?text=Energies+Naturelles',
-    description: 'Boost naturel d\'énergies',
-    ingredients: 'Maté, Gingembre, Citron, Menthe'
-  },
-  {
-    id: 17,
-    name: 'Herbes Sauvages',
-    price: 47,
-    image: 'https://via.placeholder.com/300x200?text=Herbes+Sauvages',
-    description: 'Mélange rustique d\'herbes naturelles',
-    ingredients: 'Thym, Origan, Menthe, Verveine'
-  },
-  {
-    id: 18,
-    name: 'Baie Antioxydant',
-    price: 57,
-    image: 'https://via.placeholder.com/300x200?text=Baie+Antioxydant',
-    description: 'Baies rouges pour l\'énergie',
-    ingredients: 'Baies rouges, Hibiscus, Pomme, Rose hips'
-  },
-  {
-    id: 19,
-    name: 'Gourmand Chocolat',
-    price: 59,
-    image: 'https://via.placeholder.com/300x200?text=Gourmand+Chocolat',
-    description: 'Sensation cacao et chocolat',
-    ingredients: 'Cacao, Cannelle, Vanille, Pomme'
-  },
-  {
-    id: 20,
-    name: 'Sérénité Totale',
-    price: 62,
-    image: 'https://via.placeholder.com/300x200?text=Serenite+Totale',
-    description: 'Formule premium anti-stress',
-    ingredients: 'Lavande, Mélisse, Camomille, Basilic sacré'
+    name: 'Pack 2 Paquets - Edition Spéciale',
+    price: 180,
+    image: '/assets/images/WhatsApp Image 2026-04-21 at 23.37.49 (1).jpeg',
+    description: '2 paquets complets de 10 sachets chacun - Offre groupée',
+    ingredients: 'Ingrédients naturels 100% bio'
   }
 ]
 
@@ -206,7 +78,7 @@ function Products() {
           >
             Notre Collection
           </motion.h1>
-          <p className="text-xl">Découvrez nos 20 tisanes bienfaisantes</p>
+          <p className="text-xl">Découvrez nos tisanes bienfaisantes premium</p>
         </div>
       </section>
 

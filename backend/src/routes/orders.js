@@ -1,6 +1,7 @@
 import express from 'express'
 import { v4 as uuidv4 } from 'uuid'
 import { getDatabase } from '../db/init.js'
+import { sendOrderConfirmationEmail } from '../services/emailService.js'
 
 const router = express.Router()
 
@@ -45,10 +46,28 @@ router.post('/', async (req, res) => {
       ]
     )
 
+    // Construire l'objet commande pour l'email
+    const orderForEmail = {
+      id: orderId,
+      customer,
+      items,
+      subtotal,
+      shipping,
+      tax,
+      total,
+      status: 'pending',
+      createdAt: now
+    }
+
+    // Envoyer l'email de confirmation (asynchrone - ne pas attendre)
+    sendOrderConfirmationEmail(orderForEmail).catch(error => {
+      console.error('[EMAIL] Erreur lors de l\'envoi de la confirmation:', error)
+    })
+
     res.status(201).json({
       id: orderId,
       status: 'pending',
-      message: 'Commande créée avec succès'
+      message: 'Commande créée avec succès. Vérifiez votre email pour la confirmation.'
     })
   } catch (error) {
     console.error('Erreur créer commande:', error)
